@@ -1,0 +1,458 @@
+openapi: 3.1.0
+info:
+  title: API Game-score
+  description: .
+  version: 0.0.1
+
+servers:
+- url: http://localhost:7777
+  description: Serveur de développement
+
+tags:
+  - name: hello
+    description: première API avec Express
+      
+paths:
+  /api/hello:
+    get:
+      tags:
+        - hello
+      description: Liste de messages
+      responses:
+        200:
+          description: retourne une liste de messages
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    post:
+      tags:
+        - hello
+      description: Ajoute une liste de messages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        201:
+          description: retourne les messages ajoutés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        400:
+          description: erreur de saisie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+  /api/hello/{id}:
+    get:
+      tags:
+        - hello
+      description: retourne un message
+      parameters:
+        - name: id
+          in: path
+          description: identifiant du message
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: retourne un message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+        404:
+          description: message non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+    delete:
+      tags:
+        - hello
+      description: supprime un message
+      parameters:
+        - name: id
+          in: path
+          description: identifiant du message
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: message supprimé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delete'
+        404:
+          description: message non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+  /api/hello/world:
+    get:
+      tags:
+        - hello
+      description: message de bienvenue
+      responses:
+        200:
+          description: retourne un message de bienvenue
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
+  /api/hello/square/{number}:
+    get:
+      tags:
+        - hello
+      description: résultat est égale au carré
+      parameters:
+        - name: number
+          in: path
+          description: nombre à calculer
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: retourne un résultat égale au carré
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Square'
+  /api/player:
+    get:
+      tags:
+        - player
+      description: Liste de joueurs
+      parameters:
+        - name: firstName
+          in: query
+          description: prénom du joueur / de la joueuse
+          required: false
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          description: nom du joueur / de la joueuse
+          required: false
+          schema:
+            type: string
+        - name: tour
+          in: query
+          description: circuit dans lequel évolue le joueur / la joueuse
+          required: false
+          schema:
+            type: string
+        - name: country
+          in: query
+          description: pays du joueur / de la joueuse
+          required: false
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: retourne une liste de joueurs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPlayer'
+    post:
+      tags:
+        - player
+      description: Ajoute un joueur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListPlayer'
+      responses:
+        201:
+          description: retourne le joueur ajouté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPlayer'
+        400:
+          description: erreur de saisie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+  /api/player/{id}:
+    get:
+      tags:
+        - player
+      description: retourne un joueur
+      parameters:
+        - name: id
+          in: path
+          description: identifiant du joueur
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: retourne un joueur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        404:
+          description: joueur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+    delete:
+      tags:
+        - player
+      description: supprime un joueur
+      parameters:
+        - name: id
+          in: path
+          description: identifiant du joueur
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: joueur supprimé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delete'
+        404:
+          description: joueur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+  /api/game:
+    get:
+      tags:
+        - game
+      description: Liste de matchs
+      parameters:
+        - name: tour
+          in: query
+          description: circuit dans lequel évolue le joueur / la joueuse
+          required: false
+          schema:
+            type: string
+        - name: sets
+          in: query
+          description: nombre de sets
+          required: false
+          schema:
+            type: integer
+        - name: nom
+          in: query
+          description: nom du joueur / de la joueuse
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: retourne une liste de matchs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListGame'
+  /api/game/new:
+    post:
+      tags:
+        - game
+      description: Ajoute un match
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGame'
+      responses:
+        201:
+          description: retourne le match ajouté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewGame'
+        400:
+          description: erreur de saisie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erreur'
+components:
+  schemas:
+    Hello:
+      type: object
+      properties:
+        message:
+          type: string
+      additionalProperties: false
+      required:
+        - message
+    Square:
+      type: object
+      properties:
+        result:
+          type: string
+      additionalProperties: false
+      required:
+        - result
+    Message:
+      type: array
+      items:
+        type: object
+        properties:
+          message:
+            type: string
+        additionalProperties: false
+        required:
+          - message
+    Erreur:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      additionalProperties: false
+    Delete:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      additionalProperties: false
+    Player:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        tour:
+          type: string
+        country:
+          type: string
+      additionalProperties: false
+    ListPlayer:
+      type: array
+      items:
+        type: object
+        properties:
+          firstName:
+            type: string
+          lastName:
+            type: string
+          tour:
+            type: string
+          country:
+            type: string
+        additionalProperties: false
+    Game:
+      type: object
+      properties:
+        player:
+          type: object
+          properties:
+            player1:
+              type: string
+            player2:
+              type: string
+        config:
+          type: object
+          properties:
+            tours:
+              type: string
+            sets:
+              type: number
+        state:
+          type: object
+          properties:
+            currentSet:
+              type: number
+            tieBreak:
+              type: boolean
+            score:
+              type: array
+              items:
+                type: object
+                properties:
+                  sets:
+                    type: number
+                  games:
+                    type: array
+                    items:
+                      type: number
+                  points:
+                    type: number
+    ListGame:
+      type: array
+      items:
+        type: object
+        properties:
+          player:
+            type: object
+            properties:
+              player1:
+                type: string
+              player2:
+                type: string
+          config:
+            type: object
+            properties:
+              tours:
+                type: string
+              sets:
+                type: number
+        state:
+          type: object
+          properties:
+            currentSet:
+              type: number
+            tieBreak:
+              type: boolean
+            score:
+              type: array
+              items:
+                type: object
+                properties:
+                  sets:
+                    type: number
+                  games:
+                    type: array
+                    items:
+                      type: number
+                  points:
+                    type: number
+    NewGame:
+      type: object
+      properties:
+        players:
+          type: object
+          properties:
+            player1:
+              type: string
+            player2:
+              type: string
+        config:
+          type: object
+          properties:
+            tour:
+              type: string
+            sets:
+              type: number
